@@ -1,0 +1,28 @@
+{
+    "author": "cartwright.christopher@gmail.com",
+    "dependencies": {},
+    "keywords": [],
+    "name": "bikemon",
+    "pebble": {
+        "displayName": "Bicycle Monitor",
+        "enableMultiJS": false,
+        "messageKeys": [
+            "Speed",
+            "Cadence",
+            "VibePattern"
+        ],
+        "projectType": "native",
+        "resources": {
+            "media": []
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "basalt"
+        ],
+        "uuid": "2e24a1a9-021d-4ad3-a7db-d8249d9de6de",
+        "watchapp": {
+            "watchface": false
+        }
+    },
+    "version": "1.0.0"
+}
