@@ -1,6 +1,11 @@
 #include <pebble.h>
 #include <inttypes.h>
 
+// These cannot be assigned to const
+#define CADENCE_LOW GColorDarkCandyAppleRed
+#define CADENCE_GOOD GColorIslamicGreen
+#define CADENCE_HIGH GColorDukeBlue
+
 static const uint32_t const VIBE_PATTERN_CADENCE_LOW[] = { 100, 100, 100, 100, 400 };
 static const uint32_t const VIBE_PATTERN_CADENCE_HIGH[] = { 100, 100, 100, 100, 100 };
 static const uint32_t const VIBE_PATTERN_CADENCE_GOOD[] = { 100, 100, 100 };
@@ -31,25 +36,28 @@ static void inbox_received_callback(DictionaryIterator *iter, void *context) {
   Tuple *vibe_tuple = dict_find(iter, MESSAGE_KEY_VibePattern);
   if(vibe_tuple) {
     if(vibe_tuple->value->int8 == 1) {
-        VibePattern pat = {
-          .durations = VIBE_PATTERN_CADENCE_LOW,
-          .num_segments = ARRAY_LENGTH(VIBE_PATTERN_CADENCE_LOW),
-        };
-        vibes_enqueue_custom_pattern(pat);
+      VibePattern pat = {
+        .durations = VIBE_PATTERN_CADENCE_LOW,
+        .num_segments = ARRAY_LENGTH(VIBE_PATTERN_CADENCE_LOW),
+      };
+      vibes_enqueue_custom_pattern(pat);
+      text_layer_set_background_color(s_cadence_layer, CADENCE_LOW);
     }
     else if(vibe_tuple->value->int8 == 2) {
-        VibePattern pat = {
-          .durations = VIBE_PATTERN_CADENCE_HIGH,
-          .num_segments = ARRAY_LENGTH(VIBE_PATTERN_CADENCE_HIGH),
-        };
-        vibes_enqueue_custom_pattern(pat);
+      VibePattern pat = {
+        .durations = VIBE_PATTERN_CADENCE_HIGH,
+        .num_segments = ARRAY_LENGTH(VIBE_PATTERN_CADENCE_HIGH),
+      };
+      vibes_enqueue_custom_pattern(pat);
+      text_layer_set_background_color(s_cadence_layer, CADENCE_HIGH);
     }
     else if(vibe_tuple->value->int8 == 3) {
-        VibePattern pat = {
-          .durations = VIBE_PATTERN_CADENCE_GOOD,
-          .num_segments = ARRAY_LENGTH(VIBE_PATTERN_CADENCE_GOOD),
-        };
-        vibes_enqueue_custom_pattern(pat);
+      VibePattern pat = {
+        .durations = VIBE_PATTERN_CADENCE_GOOD,
+        .num_segments = ARRAY_LENGTH(VIBE_PATTERN_CADENCE_GOOD),
+      };
+      vibes_enqueue_custom_pattern(pat);
+      text_layer_set_background_color(s_cadence_layer, CADENCE_GOOD);
     }
   }
 }
@@ -79,7 +87,7 @@ static void main_window_load(Window *window) {
   layer_add_child((Layer *)s_speed_layer, text_layer_get_layer(s_speed_unit_layer));
   
   s_cadence_layer = text_layer_create(GRect(0, bounds.size.h / 2, bounds.size.w, bounds.size.h / 2));
-  text_layer_set_background_color(s_cadence_layer, GColorDukeBlue);
+  text_layer_set_background_color(s_cadence_layer, CADENCE_LOW); // Bike is stopped when app is started
   text_layer_set_text_color(s_cadence_layer, GColorWhite);
   text_layer_set_text(s_cadence_layer, "0");
   text_layer_set_font(s_cadence_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
