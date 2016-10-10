@@ -1,6 +1,10 @@
 #include <pebble.h>
 #include <inttypes.h>
 
+static const uint32_t const VIBE_PATTERN_CADENCE_LOW[] = { 100, 100, 100, 100, 400 };
+static const uint32_t const VIBE_PATTERN_CADENCE_HIGH[] = { 100, 100, 100, 100, 100 };
+static const uint32_t const VIBE_PATTERN_CADENCE_GOOD[] = { 100, 100, 100 };
+
 static Window *s_main_window;
 static TextLayer *s_speed_layer;
 static TextLayer *s_speed_unit_layer;
@@ -22,6 +26,31 @@ static void inbox_received_callback(DictionaryIterator *iter, void *context) {
     snprintf(s_buffer, sizeof(s_buffer), "%d", (int)cadence_tuple->value->int32);
     APP_LOG(APP_LOG_LEVEL_DEBUG, "Updating cadence: %s", s_buffer);
     text_layer_set_text(s_cadence_layer, s_buffer);
+  }
+  
+  Tuple *vibe_tuple = dict_find(iter, MESSAGE_KEY_VibePattern);
+  if(vibe_tuple) {
+    if(vibe_tuple->value->int8 == 1) {
+        VibePattern pat = {
+          .durations = VIBE_PATTERN_CADENCE_LOW,
+          .num_segments = ARRAY_LENGTH(VIBE_PATTERN_CADENCE_LOW),
+        };
+        vibes_enqueue_custom_pattern(pat);
+    }
+    else if(vibe_tuple->value->int8 == 2) {
+        VibePattern pat = {
+          .durations = VIBE_PATTERN_CADENCE_HIGH,
+          .num_segments = ARRAY_LENGTH(VIBE_PATTERN_CADENCE_HIGH),
+        };
+        vibes_enqueue_custom_pattern(pat);
+    }
+    else if(vibe_tuple->value->int8 == 3) {
+        VibePattern pat = {
+          .durations = VIBE_PATTERN_CADENCE_GOOD,
+          .num_segments = ARRAY_LENGTH(VIBE_PATTERN_CADENCE_GOOD),
+        };
+        vibes_enqueue_custom_pattern(pat);
+    }
   }
 }
 
