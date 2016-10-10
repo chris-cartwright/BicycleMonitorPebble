@@ -15,7 +15,7 @@
         "resources": {
             "media": [
                 {
-                    "file": "images/icon",
+                    "file": "images/icon.png",
                     "menuIcon": true,
                     "name": "IMAGE_ICON",
                     "targetPlatforms": null,
